@@ -1,7 +1,7 @@
 {
-  "name": "typescript-library-skeleton",
+  "name": "jscodeshift-paths-in-range",
   "version": "0.0.0-development",
-  "description": "my personal ES2015 library project skeleton",
+  "description": "jscodeshift filter for paths in a given source code range",
   "main": "index.js",
   "sideEffects": false,
   "scripts": {
@@ -69,17 +69,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/jedwards1211/typescript-library-skeleton.git"
+    "url": "https://github.com/jedwards1211/jscodeshift-paths-in-range.git"
   },
   "keywords": [
-    "typescript"
+    "jscodeshift"
   ],
   "author": "Andy Edwards",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jedwards1211/typescript-library-skeleton/issues"
+    "url": "https://github.com/jedwards1211/jscodeshift-paths-in-range/issues"
   },
-  "homepage": "https://github.com/jedwards1211/typescript-library-skeleton#readme",
+  "homepage": "https://github.com/jedwards1211/jscodeshift-paths-in-range#readme",
   "devDependencies": {
     "@babel/cli": "^7.1.5",
     "@babel/core": "^7.1.6",
@@ -99,6 +99,7 @@
     "@jedwards1211/commitlint-config": "^1.0.0",
     "@jedwards1211/eslint-config-typescript": "^1.0.0",
     "@types/chai": "^4.2.0",
+    "@types/jscodeshift": "^0.6.3",
     "@types/mocha": "^5.2.7",
     "@types/node": "^12.12.6",
     "babel-eslint": "^10.0.1",
@@ -112,6 +113,7 @@
     "eslint-watch": "^4.0.2",
     "husky": "^1.1.4",
     "istanbul": "^0.4.5",
+    "jscodeshift": "^0.7.0",
     "lint-staged": "^8.0.4",
     "mocha": "^6.2.1",
     "nyc": "^13.1.0",

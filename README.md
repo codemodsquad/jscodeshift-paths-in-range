@@ -1,31 +1,39 @@
-# typescript-library-skeleton
+# jscodeshift-paths-in-range
 
-[![CircleCI](https://circleci.com/gh/jedwards1211/typescript-library-skeleton.svg?style=svg)](https://circleci.com/gh/jedwards1211/typescript-library-skeleton)
-[![Coverage Status](https://codecov.io/gh/jedwards1211/typescript-library-skeleton/branch/master/graph/badge.svg)](https://codecov.io/gh/jedwards1211/typescript-library-skeleton)
+[![CircleCI](https://circleci.com/gh/jedwards1211/jscodeshift-paths-in-range.svg?style=svg)](https://circleci.com/gh/jedwards1211/jscodeshift-paths-in-range)
+[![Coverage Status](https://codecov.io/gh/jedwards1211/jscodeshift-paths-in-range/branch/master/graph/badge.svg)](https://codecov.io/gh/jedwards1211/jscodeshift-paths-in-range)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
-[![npm version](https://badge.fury.io/js/typescript-library-skeleton.svg)](https://badge.fury.io/js/typescript-library-skeleton)
+[![npm version](https://badge.fury.io/js/jscodeshift-paths-in-range.svg)](https://badge.fury.io/js/jscodeshift-paths-in-range)
 
-This is my personal skeleton for creating an typescript library npm package. You are welcome to use it.
+A predicate for `jscodeshift` `Collection.filter` that only includes paths in the given source code range.
+This is for building IDE codemod extensions that operate on the selected code/cursor position in an editor.
 
-## Quick start
+More specifically:
 
-```sh
-npx 0-60 clone https://github.com/jedwards1211/typescript-library-skeleton.git
+- If any paths are wholly contained within the range, use them (but not paths inside them)
+- Otherwise, pick the topmost node that fully contains the range
+
+# `pathsInRange(start: number, end: number = start): Predicate`
+
+```js
+import pathsInRange from 'jscodeshift-paths-in-range'
 ```
 
-## Tools used
+Returns a predicate for `Collection.filter`.
 
-- babel 7
-- typescript
-- mocha
-- chai
-- istanbul
-- nyc
-- eslint
-- prettier
-- husky
-- semantic-release
-- renovate
-- Circle CI
-- Codecov.io
+## Example
+
+```js
+import jscodeshift from 'jscodeshift'
+import pathsInRange from 'jscodeshift-paths-in-range'
+const j = jscodeshift.withParser('babylon')
+
+// editor is an example interface to a text editor in an IDE.
+j(editor.getText())
+  .find(j.ArrowFunctionExpression)
+  .filter(
+    pathsInRange(editor.getSelectedRange().start, editor.getSelectedRange().end)
+  )
+  .forEach(path => console.log(path.node))
+```
