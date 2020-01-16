@@ -14,7 +14,7 @@ More specifically:
 - If any paths are wholly contained within the range, use them (but not paths inside them)
 - Otherwise, pick the topmost node that fully contains the range
 
-# `pathsInRange(start: number, end: number = start): Predicate`
+### `pathsInRange(start: number, end: number = start)`
 
 ```js
 import pathsInRange from 'jscodeshift-paths-in-range'
@@ -22,7 +22,12 @@ import pathsInRange from 'jscodeshift-paths-in-range'
 
 Returns a predicate for `Collection.filter`.
 
-## Example
+#### Arguments
+
+- `start` - the index of the start of the range within the source code
+- `end` - the index of the end of the range within the source code (defaults to `start`)
+
+#### Example
 
 ```js
 import jscodeshift from 'jscodeshift'
