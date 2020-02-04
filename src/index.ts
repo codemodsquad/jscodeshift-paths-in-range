@@ -36,7 +36,62 @@ export default function pathsInRange(
       )
     }
 
-    // return the bottommost paths that fully contains the range
+    // return the bottommost path that fully contains the range
+    const allFullContainers = paths.filter(
+      path =>
+        (path.value as any).start <= start && (path.value as any).end >= end
+    )
+    const fullContainersSet = new Set(allFullContainers)
+    allFullContainers.forEach(path => {
+      for (const ancestor of ancestorsOfPath(path)) {
+        fullContainersSet.delete(ancestor)
+      }
+    })
+    return fullContainersSet
+  }
+
+  return (
+    path: ASTPath<Node>,
+    index: number,
+    paths: Array<ASTPath<Node>>
+  ): boolean => {
+    if (paths !== lastPaths) {
+      lastPaths = paths
+      lastPathSet = computePathSet(paths)
+    }
+    return lastPathSet.has(path)
+  }
+}
+
+export function pathsIntersectingRange(
+  start: number,
+  end: number = start
+): (path: ASTPath<Node>, i: number, paths: Array<ASTPath<Node>>) => boolean {
+  let lastPaths: Array<ASTPath<Node>> | null = null
+  let lastPathSet: Set<ASTPath<Node>> = new Set()
+
+  function computePathSet(paths: Array<ASTPath<Node>>): Set<ASTPath<Node>> {
+    const intersected = paths.filter((path: ASTPath<Node>): boolean => {
+      const value: any = path.value
+      return (
+        value.start < end &&
+        value.end > start &&
+        (start <= value.start || end >= value.end)
+      )
+    })
+    if (intersected.length) {
+      const intersectedSet = new Set(intersected)
+      return new Set(
+        intersected.filter(path => {
+          for (const ancestor of ancestorsOfPath(path)) {
+            if (intersectedSet.has(ancestor)) return false
+          }
+          return true
+        })
+      )
+    }
+
+    // return the bottommost path that fully contains the range
     const allFullContainers = paths.filter(
       path =>
         (path.value as any).start <= start && (path.value as any).end >= end

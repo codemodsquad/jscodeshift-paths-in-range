@@ -42,3 +42,19 @@ j(editor.getText())
   )
   .forEach(path => console.log(path.node))
 ```
+
+### `pathsIntersectingRange(start: number, end: number = start)`
+
+The only difference between this and `pathsInRange` is it will include nodes that
+extend beyond `start` or `end`.
+
+```js
+import pathsIntersectingRange from 'jscodeshift-paths-in-range'
+```
+
+Returns a predicate for `Collection.filter`.
+
+#### Arguments
+
+- `start` - the index of the start of the range within the source code
+- `end` - the index of the end of the range within the source code (defaults to `start`)

@@ -5,6 +5,8 @@ import { expect } from 'chai'
 import pathsToTransformFilter from './index'
 import jscodeshift from 'jscodeshift'
 
+import { pathsIntersectingRange } from './'
+
 const j = jscodeshift.withParser('babylon')
 
 describe(`pathsToTransformFilter`, function() {
@@ -106,5 +108,42 @@ var qlarmge
       var gloob
     }`
     )
+  })
+})
+
+describe(`pathsIntersectingRange`, function() {
+  const code = `
+const Comp = () => (
+  <div>
+    This is a
+    <button>
+      Test
+    </button>
+    <span />
+  </div>
+) 
+`
+
+  it('works', () => {
+    const root = j(code)
+    const elements = root
+      .find(j.Node)
+      .filter(
+        path =>
+          path.node.type !== 'JSXOpeningElement' &&
+          path.node.type !== 'JSXClosingElement' &&
+          (path.node.type === 'JSXElement' ||
+            (path.parent && path.parent.node.type === 'JSXElement'))
+      )
+      .filter(
+        pathsIntersectingRange(code.indexOf('is a'), code.indexOf('<span'))
+      )
+      .nodes()
+    expect(elements[0].type).to.equal('JSXText')
+    expect((elements[0] as any).value).to.match(/is a/)
+    expect(elements[1].type).to.equal('JSXElement')
+    expect(elements[2].type).to.equal('JSXText')
+    expect((elements[2] as any).value).not.to.match(/\S/)
+    expect(elements).to.have.lengthOf(3)
   })
 })
